@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  pg_user:
+    image: postgres
+    environment:
+      - POSTGRES_DB=users
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+    container_name: pg_user
+    volumes:
+      - pgdbdata:/var/lib/postgresql/data/
+
+
+  fast_api:
+    build: ./
+    container_name: fast_api
+    command: uvicorn main:app --host 0.0.0.0
+    volumes:
+      - ./:/usr/src/app
+    ports:
+      - '8000:8000'
+    depends_on:
+      - pg_user
+
+
+
+volumes:
+  pgdbdata: null
